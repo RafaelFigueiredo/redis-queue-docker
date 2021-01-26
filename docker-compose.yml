@@ -1,0 +1,29 @@
+version: "3.3"
+
+
+services:
+  app: 
+    build: .
+    entrypoint: python3 /app/main.py
+    volumes:
+      - .:/app
+    networks: 
+      - redis_network
+
+  worker:
+    build: .
+    entrypoint: rqworker --url redis://redis
+    volumes:
+      - .:/app
+    networks: 
+      - redis_network
+
+
+  redis:
+    image: redis
+    networks: 
+      - redis_network
+
+networks:
+  redis_network:
+    external: false
